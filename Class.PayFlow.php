@@ -238,7 +238,41 @@ class PayFlow {
   
     $this->NVP = array_merge($this->NVP, $action);
   }
+
+  /**
+   * @uses      Sets the Profile ID for recurring payment functions that require it (like Inquiry or Cancel)
+   * @access    Public
+   * @param     String $profileID - PROFILEID value returned by PayFlow when the profile was set up
+   * @return    None.
+   * @example   $PayFlow->setProfileID('RT0000001234'); 
+   */
+  public function setProfileID($profileID = 'RT0000001234') {
+    $action = array(
+      'ORIGPROFILEID'=>$profileID
+    );
   
+    $this->NVP = array_merge($this->NVP, $action);
+  }
+  
+  /**
+   * @uses      Sets the PAYMENTHISTORY flag for recurring payment inquiries. 
+   * @access    Public
+   * @param     String $paymentFlag - 'Y', 'N', or 'O' ('N' just removes the flag; 'Y' or 'O' are passed through to PayPal). Default value of 'N', which clears the flag.
+   * @return    None.
+   * @example   $PayFlow->setPaymentHistoryFlag('Y'); 
+   */
+  public function setPaymentHistoryFlag($paymentFlag = 'N') {
+    if($paymentFlag == 'N') {
+      unset($this->NVP['PAYMENTHISTORY']);
+    } elseif($paymentFlag == 'Y' || $paymentFlag == 'O') {
+      $action = array(
+        'PAYMENTHISTORY'=>$paymentFlag
+      );
+      $this->NVP = array_merge($this->NVP, $action);
+    } else {
+      //do nothing.
+    }
+  }
   
   /**
    * @uses      Sets the Profile name for recurring payments.
